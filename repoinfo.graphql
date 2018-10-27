@@ -1,0 +1,44 @@
+
+fragment RepoInfo on Repository {
+  nameWithOwner
+  createdAt
+  forkCount
+  hasWikiEnabled
+  url
+  stargazers {
+    totalCount
+  }
+  issues {
+    totalCount
+  }
+  help_wanted: issues(labels:["help wanted"]) {
+    totalCount
+  }
+  good_first_issues: issues(labels:["good first issue"]) {
+    totalCount
+  }
+  open_issues:issues(states:OPEN) {
+    totalCount
+  }
+  projects {
+    totalCount
+  }
+  milestones {
+    totalCount
+  }
+  open_milestones: milestones(states:OPEN) {
+    totalCount
+  }
+  labels {
+    totalCount
+  }
+  pullRequests {
+    totalCount
+  }
+  releases {
+    totalCount
+  }
+  watchers {
+    totalCount
+  }
+}
