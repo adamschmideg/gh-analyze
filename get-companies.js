@@ -1,9 +1,9 @@
 const fs = require("fs")
-const https = require("https")
+const request = require("request")
 
-const fragment = () => {
-  return fs.readFileSync("repoinfo.graphql").toString()
-}
+const slurp = (filename) => { return fs.readFileSync(filename).toString() }
+
+const fragment = () => { slurp("repoinfo.graphql") }
 
 const getQuery = (org, repo, frag) => {
   return `
@@ -21,13 +21,23 @@ const execQuery = (options, query, token) => {
   req.on('error', (error) => { return null, error })
 }
 
-const options = {
-  hostname: "api.github.com",
-  port: 443,
-  path: "/graphql",
-  method: "POST"
-}
 const githubEndpoint = "https://api.github.com/graphql"
-const testQuery = "{ 'query': '{ query { viewer { login }}}' }"
 
-console.log(execQuery(options, testQuery, ""))
+const token = slurp("TOKEN").trim()
+
+const options = {
+  headers: {'User-Agent': 'gh-analyze',
+	    Authorization: `Bearer ${token}`}
+}
+const githubRequest = request.defaults(options)
+
+const testQuery = JSON.stringify({'query': '{ query { viewer { login }}}'})
+
+// console.log(execQuery(options, testQuery, ""))
+
+
+githubRequest(githubEndpoint, testQuery, (err, res, body) => {
+  if (err) { return console.log(err) }
+  console.log("yeah")
+  console.log(body)
+})
