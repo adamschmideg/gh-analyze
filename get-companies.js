@@ -21,23 +21,26 @@ const execQuery = (options, query, token) => {
   req.on('error', (error) => { return null, error })
 }
 
-const githubEndpoint = "https://api.github.com/graphql"
-
 const token = slurp("TOKEN").trim()
 
+const testQuery = '{  viewer { login }}'
+
 const options = {
+  url: "https://api.github.com/graphql",
+  json: true,
+  method: "POST",
+  body: {query: testQuery},
   headers: {'User-Agent': 'gh-analyze',
 	    Authorization: `Bearer ${token}`}
 }
 const githubRequest = request.defaults(options)
 
-const testQuery = JSON.stringify({'query': '{ query { viewer { login }}}'})
 
-// console.log(execQuery(options, testQuery, ""))
+console.log(testQuery)
 
 
-githubRequest(githubEndpoint, testQuery, (err, res, body) => {
+request(options, (err, res, body) => {
   if (err) { return console.log(err) }
   console.log("yeah")
-  console.log(body)
+  console.log(JSON.stringify(body, null, 2))
 })
