@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "request": "^2.88.0"
+    "node-github-graphql": "^0.2.7"
   }
 }
