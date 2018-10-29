@@ -16,7 +16,7 @@ const github = new GithubGraphQLApi({
   userAgent: 'gh-analyze'
 })
 
-const fragment = () => { return slurp("repoinfo.graphql") }
+const fragment = slurp("repoinfo.graphql")
 
 const getQuery = (org, repo, frag) => {
   return `
@@ -49,17 +49,28 @@ const extractValues = async (rawData) => {
   return simpleValues.concat(countValues)
 }
 
+const queryOneRepo = async (org, repo) => {
+  const query = getQuery(org, repo, fragment)
+  const rawData = await execQuery(query)
+  const record = await extractValues(rawData)
+  return record
+}
+
+
 const testQuery = '{  viewer { login }}'
 
 //const q = testQuery
 
 const main = async () => {
-  const q = getQuery("Microsoft", "vscode", fragment())
-  const repos = await repoNames("100-companies.csv")
-  console.log(repos[1])
-  //const rawData = await execQuery(q)
-  //const record = await extractValues(rawData)
-  //console.log(JSON.stringify(record, null, 2))
+  //const q = getQuery("Microsoft", "vscode", fragment)
+  const allRepos = await repoNames("100-companies.csv")
+  const repos = allRepos.slice(0,2)
+  let records = []
+  for (const orgAndRepo of repos) {
+    const rec = await queryOneRepo(orgAndRepo[0], orgAndRepo[1])
+    records.push(rec)
+  }
+  console.log(records)
 }
 
 main()
