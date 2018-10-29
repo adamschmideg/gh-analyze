@@ -1,5 +1,6 @@
 const fs = require("fs")
 const GithubGraphQLApi = require('node-github-graphql')
+const parseCsv = require("csvtojson")
 
 const simpleColumns = "nameWithOwner,createdAt,forkCount,hasWikiEnabled"
 const totalCountColumns = "stargazers,issues,help_wanted,good_first_issues,open_issues,projects,milestones,open_milestones,labels,pullRequests,releases,watchers"
@@ -26,6 +27,13 @@ const getQuery = (org, repo, frag) => {
   `
 }
 
+const repoNames = async (filename) => {
+  const repos = await parseCsv()
+    .fromFile(filename)
+  const names = repos.map(repo => repo.repo_name.split("/"))
+  return names
+}
+
 const execQuery = async (query) => {
   let result
   await github.query(query)
@@ -47,9 +55,11 @@ const testQuery = '{  viewer { login }}'
 
 const main = async () => {
   const q = getQuery("Microsoft", "vscode", fragment())
-  const rawData = await execQuery(q)
-  const record = await extractValues(rawData)
-  console.log(JSON.stringify(record, null, 2))
+  const repos = await repoNames("100-companies.csv")
+  console.log(repos[1])
+  //const rawData = await execQuery(q)
+  //const record = await extractValues(rawData)
+  //console.log(JSON.stringify(record, null, 2))
 }
 
 main()
