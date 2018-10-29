@@ -64,7 +64,7 @@ const queryOneRepo = async (org, repo) => {
 
 const writeToCsv = (fields, rows) => {
   try {
-    const opts = { fields: fields, quote: ""}
+    const opts = { fields: fields, quote: "", header: false}
     const csv = json2csv(rows, opts)
     console.log(csv)
   }
@@ -84,15 +84,14 @@ const _main = async () => {
 const testQuery = '{  viewer { login }}'
 
 const main = async () => {
-  //const q = getQuery("Microsoft", "vscode", fragment)
   const allRepos = await repoNames("100-companies.csv")
-  const repos = allRepos.slice(0,2)
+  const repos = allRepos.slice(5,99)
   let records = []
   for (const orgAndRepo of repos) {
     const rec = await queryOneRepo(orgAndRepo[0], orgAndRepo[1])
-    records.push(rec)
+    writeToCsv(columns, rec)
   }
-  writeToCsv(columns, records)
+  //writeToCsv(columns, records)
 }
 
 main()
