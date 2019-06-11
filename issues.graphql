@@ -1,0 +1,19 @@
+query($cursor: String, $filter: IssueFilters, $order: IssueOrder) {
+  repository(owner:"ethereum", name:"go-ethereum") {
+    issues(first:3, after: $cursor, filterBy: $filter, orderBy:$order) {
+  		nodes {
+        title
+      }
+      pageInfo {
+        #startCursor
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+{
+  "cursor": "Y3Vyc29yOnYyOpK5MjAxNS0wMi0xNFQxOToxMzozOCswMTowMM4DcHPv",
+  "filter": {"since": "2018-01-01T10:15:30Z"},
+  "order": {"field": "CREATED_AT", "direction": "ASC"}
+}
