@@ -12,8 +12,3 @@ query($cursor: String, $filter: IssueFilters, $order: IssueOrder) {
     }
   }
 }
-{
-  "cursor": "Y3Vyc29yOnYyOpK5MjAxNS0wMi0xNFQxOToxMzozOCswMTowMM4DcHPv",
-  "filter": {"since": "2018-01-01T10:15:30Z"},
-  "order": {"field": "CREATED_AT", "direction": "ASC"}
-}
