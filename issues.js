@@ -11,8 +11,7 @@ const issues_query = slurp('issues.graphql')
 const vars = 
 {
   //"cursor": "Y3Vyc29yOnYyOpK5MjAxNS0wMi0xNFQxOToxMzozOCswMTowMM4DcHPv",
-  "filter": {"since": "2018-01-01T10:15:30Z"},
-  "order": {"field": "CREATED_AT", "direction": "ASC"}
+  "order": {"field": "CREATED_AT", "direction": "DESC"}
 }
 
 const paginatedQuery = async function(options, successCb, errorCb) {
@@ -25,7 +24,7 @@ const paginatedQuery = async function(options, successCb, errorCb) {
         successCb.apply(this, args)
         await delay(actualWait)
     }
-    var count = maxCount
+    var count = 0
     var hasNext = true
     while (hasNext) {
         await query(options, delayedSuccessCb, errorCb)
@@ -51,9 +50,19 @@ const theQuery = {
     },
     variables: vars,
     maxCount: 2,
+    wait: 10,
     pageInfoPath: "data.repository.issues.pageInfo"
 }
 
-paginatedQuery(theQuery, 
-    response => console.log(JSON.stringify(response)))
-    .catch((error) => console.error(JSON.stringify(error)))
+main = async () => {
+    console.log("[")
+    await paginatedQuery(theQuery, 
+        response => {
+            console.log(JSON.stringify(response, null, 2))
+            console.log(",")
+        })
+        .catch((error) => console.error(JSON.stringify(error)))
+    console.log("{}]")
+}
+
+main()

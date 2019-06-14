@@ -1,12 +1,14 @@
-query($cursor: String, $filter: IssueFilters, $order: IssueOrder) {
+
+query($cursor: String, $order: IssueOrder) {
   repository(owner:"ethereum", name:"go-ethereum") {
-    issues(first:20, after: $cursor, filterBy: $filter, orderBy:$order) {
+    issues(first:2, after: $cursor, orderBy:$order) {
   		nodes {
         title
         body
+        createdAt
+        closedAt
       }
       pageInfo {
-        #startCursor
         endCursor
         hasNextPage
       }
